@@ -252,8 +252,8 @@ fun GameScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = com.example.puzzlegame.ui.theme.GlassSurface,
                             contentColor = com.example.puzzlegame.ui.theme.AccentPrimary,
-                            disabledContainerColor = com.example.puzzlegame.ui.theme.GlassSurface.copy(alpha = 0.5f),
-                            disabledContentColor = com.example.puzzlegame.ui.theme.TextSecondary.copy(alpha = 0.5f)
+                            disabledContainerColor = com.example.puzzlegame.ui.theme.GlassSurface.copy(alpha = 0.05f),
+                            disabledContentColor = com.example.puzzlegame.ui.theme.TextPrimary.copy(alpha = 0.45f)
                         ),
                         contentPadding = PaddingValues(0.dp)
                     ) {

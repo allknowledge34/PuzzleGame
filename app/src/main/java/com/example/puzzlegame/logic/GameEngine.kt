@@ -1,11 +1,11 @@
 package com.example.puzzlegame.logic
 
-import com.duddletech.blockpuzzlegame.model.Cell
-import com.duddletech.blockpuzzlegame.model.CellOffset
-import com.duddletech.blockpuzzlegame.model.GameState.Companion.GRID_SIZE
-import com.duddletech.blockpuzzlegame.model.Grid
-import com.duddletech.blockpuzzlegame.model.Shape
-import com.duddletech.blockpuzzlegame.model.ShapeTemplates
+import com.example.puzzlegame.model.Cell
+import com.example.puzzlegame.model.CellOffset
+import com.example.puzzlegame.model.GameState.Companion.GRID_SIZE
+import com.example.puzzlegame.model.Grid
+import com.example.puzzlegame.model.Shape
+import com.example.puzzlegame.model.ShapeTemplates
 import kotlin.random.Random
 
 object GameEngine {

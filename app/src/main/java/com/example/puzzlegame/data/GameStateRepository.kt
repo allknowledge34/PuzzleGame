@@ -6,11 +6,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.duddletech.blockpuzzlegame.model.BlockColor
-import com.duddletech.blockpuzzlegame.model.Cell
-import com.duddletech.blockpuzzlegame.model.CellOffset
-import com.duddletech.blockpuzzlegame.model.GameState
-import com.duddletech.blockpuzzlegame.model.Shape
+import com.example.puzzlegame.model.BlockColor
+import com.example.puzzlegame.model.Cell
+import com.example.puzzlegame.model.CellOffset
+import com.example.puzzlegame.model.GameState
+import com.example.puzzlegame.model.Shape
 import kotlinx.coroutines.flow.first
 import org.json.JSONArray
 import org.json.JSONObject

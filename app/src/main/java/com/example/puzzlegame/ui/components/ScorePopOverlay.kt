@@ -37,48 +37,50 @@ fun ScorePopOverlay(
 ) {
     val density = LocalDensity.current
     for (pop in pops) {
-        val progress = remember(pop.id) { Animatable(0f) }
+        androidx.compose.runtime.key(pop.id) {
+            val progress = remember(pop.id) { Animatable(0f) }
 
-        LaunchedEffect(pop.id) {
-            progress.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 800, easing = LinearEasing)
-            )
-            onDismiss(pop.id)
-        }
+            LaunchedEffect(pop.id) {
+                progress.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 800, easing = LinearEasing)
+                )
+                onDismiss(pop.id)
+            }
 
-        val riseDp = 40.dp * progress.value
-        val alpha = 1f - progress.value
+            val riseDp = 40.dp * progress.value
+            val alpha = 1f - progress.value
 
-        // Convert grid row/col to dp offset within the grid composable
-        val xPx = gridOffset.x + pop.centerCol * cellSizePx + cellSizePx / 2f
-        val yPx = gridOffset.y + pop.centerRow * cellSizePx
-        val xDp = with(density) { xPx.toDp() }
-        val yDp = with(density) { yPx.toDp() } - riseDp
+            // Convert grid row/col to dp offset within the grid composable
+            val xPx = gridOffset.x + pop.centerCol * cellSizePx + cellSizePx / 2f
+            val yPx = gridOffset.y + pop.centerRow * cellSizePx
+            val xDp = with(density) { xPx.toDp() }
+            val yDp = with(density) { yPx.toDp() } - riseDp
 
-        val fontSize = if (pop.isBonus) 28.sp else 20.sp
-        val color = if (pop.isBonus) BrightGoldColor else GoldColor
-        val fontWeight = if (pop.isBonus) FontWeight.ExtraBold else FontWeight.Bold
+            val fontSize = if (pop.isBonus) 28.sp else 20.sp
+            val color = if (pop.isBonus) BrightGoldColor else GoldColor
+            val fontWeight = if (pop.isBonus) FontWeight.ExtraBold else FontWeight.Bold
 
-        Box(
-            modifier = modifier
-                .offset(x = xDp, y = yDp)
-                .graphicsLayer { this.alpha = alpha },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "+${pop.points}",
-                style = TextStyle(
-                    color = color,
-                    fontSize = fontSize,
-                    fontWeight = fontWeight,
-                    shadow = Shadow(
-                        color = Color.Black,
-                        offset = Offset(1.5f, 1.5f),
-                        blurRadius = 3f
+            Box(
+                modifier = modifier
+                    .offset(x = xDp, y = yDp)
+                    .graphicsLayer { this.alpha = alpha },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "+${pop.points}",
+                    style = TextStyle(
+                        color = color,
+                        fontSize = fontSize,
+                        fontWeight = fontWeight,
+                        shadow = Shadow(
+                            color = Color.Black,
+                            offset = Offset(1.5f, 1.5f),
+                            blurRadius = 3f
+                        )
                     )
                 )
-            )
+            }
         }
     }
 }

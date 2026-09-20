@@ -48,14 +48,9 @@ fun ScorePopOverlay(
                 onDismiss(pop.id)
             }
 
-            val riseDp = 40.dp * progress.value
-            val alpha = 1f - progress.value
-
             // Convert grid row/col to dp offset within the grid composable
             val xPx = gridOffset.x + pop.centerCol * cellSizePx + cellSizePx / 2f
             val yPx = gridOffset.y + pop.centerRow * cellSizePx
-            val xDp = with(density) { xPx.toDp() }
-            val yDp = with(density) { yPx.toDp() } - riseDp
 
             val fontSize = if (pop.isBonus) 28.sp else 20.sp
             val color = if (pop.isBonus) BrightGoldColor else GoldColor
@@ -63,8 +58,15 @@ fun ScorePopOverlay(
 
             Box(
                 modifier = modifier
-                    .offset(x = xDp, y = yDp)
-                    .graphicsLayer { this.alpha = alpha },
+                    .offset {
+                        val currentProgress = progress.value
+                        val risePx = 40.dp.toPx() * currentProgress
+                        androidx.compose.ui.unit.IntOffset(
+                            x = kotlin.math.round(xPx).toInt(),
+                            y = kotlin.math.round(yPx - risePx).toInt()
+                        )
+                    }
+                    .graphicsLayer { this.alpha = 1f - progress.value },
                 contentAlignment = Alignment.Center
             ) {
                 Text(

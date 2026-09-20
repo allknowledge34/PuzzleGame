@@ -60,13 +60,12 @@ fun GameGrid(
             )
         }
     }
-    val animProgress = clearAnim.value
-
     Canvas(
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(1f) // square grid
     ) {
+        val animProgress = clearAnim.value
         val padding = size.width * 0.02f
         val boardSize = size.width - padding * 2
         val cellSize = boardSize / GRID_SIZE

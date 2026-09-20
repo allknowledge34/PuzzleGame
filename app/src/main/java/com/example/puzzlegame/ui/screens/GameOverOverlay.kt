@@ -35,9 +35,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.puzzlegame.ui.theme.PuzzleGameTheme
-import com.example.puzzlegame.ui.theme.BoardDark
-import com.example.puzzlegame.ui.theme.TextCream
-import com.example.puzzlegame.ui.theme.TextGold
+import androidx.compose.foundation.border
+import com.example.puzzlegame.ui.theme.TextPrimary
+import com.example.puzzlegame.ui.theme.TextSecondary
+import com.example.puzzlegame.ui.theme.AccentPrimary
+import com.example.puzzlegame.ui.theme.GlassSurface
+import com.example.puzzlegame.ui.theme.GlassBorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -63,7 +66,7 @@ fun GameOverOverlay(
             target: Float, duration: Int = 400
         ) = animateTo(target, tween(duration, easing = FastOutSlowInEasing))
 
-        launch { scrimAlpha.slideTo(0.7f) }
+        launch { scrimAlpha.slideTo(0.85f) }
         launch {
             delay(100)
             launch { cardAlpha.slideTo(1f) }
@@ -107,7 +110,8 @@ fun GameOverOverlay(
                     alpha = cardAlpha.value
                     translationY = cardOffsetY.value * density
                 }
-                .background(BoardDark, RoundedCornerShape(16.dp))
+                .background(GlassSurface, RoundedCornerShape(24.dp))
+                .border(1.5.dp, GlassBorder, RoundedCornerShape(24.dp))
                 .padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -115,7 +119,7 @@ fun GameOverOverlay(
             Text(
                 text = "Game Over",
                 style = MaterialTheme.typography.headlineLarge,
-                color = TextGold
+                color = TextPrimary
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -123,7 +127,7 @@ fun GameOverOverlay(
             Text(
                 text = "Score: $displayedScore",
                 style = MaterialTheme.typography.titleMedium,
-                color = TextCream
+                color = TextSecondary
             )
 
             if (isNewHighScore) {
@@ -131,7 +135,7 @@ fun GameOverOverlay(
                 Text(
                     text = "New High Score!",
                     style = MaterialTheme.typography.titleMedium,
-                    color = TextGold,
+                    color = AccentPrimary,
                     modifier = Modifier.graphicsLayer {
                         scaleX = highScorePulse.value
                         scaleY = highScorePulse.value
@@ -144,15 +148,15 @@ fun GameOverOverlay(
             Button(
                 onClick = onNewGame,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = TextGold,
-                    contentColor = BoardDark
+                    containerColor = AccentPrimary,
+                    contentColor = TextPrimary
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
                     text = "Play Again",
                     style = MaterialTheme.typography.titleMedium,
-                    color = BoardDark
+                    color = TextPrimary
                 )
             }
         }
@@ -172,12 +176,12 @@ internal data class ConfettiParticle(
 )
 
 internal val confettiColors = listOf(
-    Color(0xFFFFD54F),
-    Color(0xFFE53935),
-    Color(0xFF1E88E5),
-    Color(0xFF43A047),
-    Color(0xFF8E24AA),
-    Color(0xFFFB8C00),
+    Color(0xFF38BDF8),
+    Color(0xFF8B5CF6),
+    Color(0xFFF43F5E),
+    Color(0xFF10B981),
+    Color(0xFFF59E0B),
+    Color(0xFF0EA5E9),
     Color(0xFFFFFFFF),
 )
 

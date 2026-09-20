@@ -34,10 +34,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.example.puzzlegame.model.ColorPalette
-import com.example.puzzlegame.ui.theme.BoardDark
-import com.example.puzzlegame.ui.theme.TextCream
-import com.example.puzzlegame.ui.theme.TextGold
+import com.example.puzzlegame.ui.theme.BackgroundDark
+import com.example.puzzlegame.ui.theme.TextPrimary
+import com.example.puzzlegame.ui.theme.AccentPrimary
 import com.example.puzzlegame.ui.theme.paletteOf
+
+import androidx.compose.foundation.shape.CircleShape
+import com.example.puzzlegame.ui.theme.GlassSurface
+import com.example.puzzlegame.ui.theme.GlassBorder
 
 @Composable
 fun SettingsScreen(
@@ -54,7 +58,7 @@ fun SettingsScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(BoardDark)
+            .background(BackgroundDark)
     ) {
         Column(
             modifier = Modifier
@@ -65,78 +69,71 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                IconButton(onClick = onBack) {
+                IconButton(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .size(44.dp)
+                        .background(GlassSurface, CircleShape)
+                        .border(1.dp, GlassBorder, CircleShape)
+                        .clip(CircleShape)
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = TextCream
+                        tint = TextPrimary,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
+                Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = "Settings",
                     style = MaterialTheme.typography.headlineMedium,
-                    color = TextCream
+                    color = TextPrimary
                 )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Haptic Feedback",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = TextCream
-                )
-                Switch(
-                    checked = hapticEnabled,
-                    onCheckedChange = onHapticToggle,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = TextGold,
-                        checkedTrackColor = TextGold.copy(alpha = 0.4f),
-                        uncheckedThumbColor = TextCream.copy(alpha = 0.6f),
-                        uncheckedTrackColor = TextCream.copy(alpha = 0.2f)
+            GlassRow(
+                label = "Haptic Feedback",
+                content = {
+                    Switch(
+                        checked = hapticEnabled,
+                        onCheckedChange = onHapticToggle,
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = AccentPrimary,
+                            checkedTrackColor = AccentPrimary.copy(alpha = 0.4f),
+                            uncheckedThumbColor = TextPrimary.copy(alpha = 0.6f),
+                            uncheckedTrackColor = TextPrimary.copy(alpha = 0.2f)
+                        )
                     )
-                )
-            }
+                }
+            )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Fair Shapes",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = TextCream
-                )
-                Switch(
-                    checked = easyShapes,
-                    onCheckedChange = onEasyShapesToggle,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = TextGold,
-                        checkedTrackColor = TextGold.copy(alpha = 0.4f),
-                        uncheckedThumbColor = TextCream.copy(alpha = 0.6f),
-                        uncheckedTrackColor = TextCream.copy(alpha = 0.2f)
+            GlassRow(
+                label = "Fair Shapes",
+                content = {
+                    Switch(
+                        checked = easyShapes,
+                        onCheckedChange = onEasyShapesToggle,
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = AccentPrimary,
+                            checkedTrackColor = AccentPrimary.copy(alpha = 0.4f),
+                            uncheckedThumbColor = TextPrimary.copy(alpha = 0.6f),
+                            uncheckedTrackColor = TextPrimary.copy(alpha = 0.2f)
+                        )
                     )
-                )
-            }
+                }
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
                 text = "Color Palette",
                 style = MaterialTheme.typography.titleMedium,
-                color = TextCream,
+                color = TextPrimary,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
 
@@ -148,9 +145,29 @@ fun SettingsScreen(
                     selected = palette == selectedPalette,
                     onClick = { onPaletteSelect(palette) }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
+    }
+}
+
+@Composable
+private fun GlassRow(label: String, content: @Composable () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(GlassSurface, RoundedCornerShape(16.dp))
+            .border(1.dp, GlassBorder, RoundedCornerShape(16.dp))
+            .padding(horizontal = 20.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleMedium,
+            color = TextPrimary
+        )
+        content()
     }
 }
 
@@ -169,30 +186,35 @@ private fun PaletteRow(
         ColorPalette.WOOD -> "Wood"
     }
 
+    val bgColor = if (selected) GlassSurface.copy(alpha = 0.25f) else GlassSurface.copy(alpha = 0.1f)
+    val borderColor = if (selected) AccentPrimary else GlassBorder
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .background(bgColor, RoundedCornerShape(16.dp))
+            .border(if (selected) 1.5.dp else 1.dp, borderColor, RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp))
             .selectable(selected = selected, onClick = onClick, role = Role.RadioButton)
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+            .padding(horizontal = 12.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = selected,
             onClick = onClick,
             colors = RadioButtonDefaults.colors(
-                selectedColor = TextGold,
-                unselectedColor = TextCream.copy(alpha = 0.6f)
+                selectedColor = AccentPrimary,
+                unselectedColor = TextPrimary.copy(alpha = 0.6f)
             )
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = label,
             style = MaterialTheme.typography.bodyLarge,
-            color = TextCream,
-            modifier = Modifier.width(72.dp)
+            color = if (selected) TextPrimary else TextPrimary.copy(alpha = 0.8f),
+            modifier = Modifier.width(68.dp)
         )
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             colors.forEach { color ->
                 ColorSwatch(color = color, selected = selected)
@@ -205,12 +227,12 @@ private fun PaletteRow(
 private fun ColorSwatch(color: Color, selected: Boolean) {
     Box(
         modifier = Modifier
-            .size(28.dp)
-            .clip(RoundedCornerShape(4.dp))
+            .size(26.dp)
+            .clip(RoundedCornerShape(6.dp))
             .background(color)
             .then(
                 if (selected) {
-                    Modifier.border(2.dp, TextCream, RoundedCornerShape(4.dp))
+                    Modifier.border(1.5.dp, TextPrimary, RoundedCornerShape(6.dp))
                 } else {
                     Modifier
                 }

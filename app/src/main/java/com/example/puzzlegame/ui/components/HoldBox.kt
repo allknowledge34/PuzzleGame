@@ -4,9 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,11 +26,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.puzzlegame.model.Shape
-import com.example.puzzlegame.ui.theme.BoardLight
-import com.example.puzzlegame.ui.theme.BoardMedium
-
+import com.example.puzzlegame.ui.theme.AccentPrimary
+import com.example.puzzlegame.ui.theme.GlassSurface
+import com.example.puzzlegame.ui.theme.GlassBorder
+import com.example.puzzlegame.ui.theme.TextSecondary
 
 @Composable
 fun HoldBox(
@@ -40,14 +49,15 @@ fun HoldBox(
     modifier: Modifier = Modifier
 ) {
     var positionInRoot by remember { mutableStateOf(Offset.Zero) }
-    val shape = RoundedCornerShape(12.dp)
+    val boxShape = RoundedCornerShape(16.dp)
+    val borderColor = if (isDragging) AccentPrimary else GlassBorder
 
-    Box(
-        contentAlignment = Alignment.Center,
+    Column(
         modifier = modifier
-            .background(BoardMedium, shape)
-            .border(1.dp, BoardLight, shape)
-            .padding(12.dp)
+            .padding(bottom = 12.dp)
+            .background(GlassSurface, boxShape)
+            .border(1.dp, borderColor, boxShape)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
             .onGloballyPositioned { coords ->
                 positionInRoot = coords.positionInRoot()
                 onGloballyPositioned(coords)
@@ -70,11 +80,35 @@ fun HoldBox(
                     onDragEnd = onDragEnd,
                     onDragCancel = onDragCancel
                 )
-            }
-            .graphicsLayer {
-                alpha = if (isDragging) 0f else 1f
-            }
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        ShapePreview(shape = holdShape, dimmed = dimmed)
+        Text(
+            text = "HOLD",
+            style = MaterialTheme.typography.labelSmall.copy(
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp
+            ),
+            color = TextSecondary,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(80.dp)
+                .graphicsLayer {
+                    alpha = if (isDragging) 0f else 1f
+                }
+        ) {
+            if (holdShape != null) {
+                ShapePreview(
+                    shape = holdShape,
+                    dimmed = dimmed
+                )
+            } else {
+                Spacer(modifier = Modifier.size(24.dp))
+            }
+        }
     }
 }

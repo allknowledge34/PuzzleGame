@@ -1,5 +1,7 @@
 package com.example.puzzlegame.ui.components
 
+import androidx.compose.foundation.layout.aspectRatio
+
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -21,6 +23,12 @@ import androidx.compose.ui.unit.dp
 import com.example.puzzlegame.model.Shape
 
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import com.example.puzzlegame.ui.theme.GlassSurface
+import com.example.puzzlegame.ui.theme.GlassBorder
+
 @Composable
 fun DraggableShapePreview(
     shape: Shape?,
@@ -34,12 +42,15 @@ fun DraggableShapePreview(
     modifier: Modifier = Modifier
 ) {
     var positionInRoot by remember { mutableStateOf(Offset.Zero) }
+    val boxShape = RoundedCornerShape(16.dp)
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .fillMaxWidth()
-            .padding(12.dp)
+            .padding(horizontal = 6.dp, vertical = 8.dp)
+            .aspectRatio(1f)
+            .background(GlassSurface, boxShape)
+            .border(1.dp, GlassBorder, boxShape)
             .onGloballyPositioned { coords ->
                 positionInRoot = coords.positionInRoot()
             }
@@ -65,7 +76,6 @@ fun DraggableShapePreview(
                 )
             }
             .graphicsLayer {
-                // Hide the tray shape while it's being dragged
                 alpha = if (isDragging) 0f else 1f
             }
     ) {

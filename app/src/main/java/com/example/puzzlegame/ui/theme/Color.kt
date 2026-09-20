@@ -7,18 +7,20 @@ import androidx.compose.ui.graphics.Color
 import com.example.puzzlegame.model.BlockColor
 import com.example.puzzlegame.model.ColorPalette
 
-val BoardDark = Color(0xFF3E2723)
-val BoardMedium = Color(0xFF5D4037)
-val BoardLight = Color(0xFF795548)
-val GridLine = Color(0xFF4E342E)
-val CellInset = Color(0xFF4A3228)
-val TextCream = Color(0xFFFFF8E1)
-val TextGold = Color(0xFFFFD54F)
-val WarningRed = Color(0xFFFF5252)
-val GhostValid = Color(0x4400C853)
-val GhostInvalid = Color(0x44FF1744)
-val Base = Color(0xFFCDBFB0)
-val Trim = Color(0xFFAC9A8A)
+val BackgroundDark = Color(0xFF090E17)
+val GlowBlue = Color(0xFF0C4A6E)
+val GlowPurple = Color(0xFF1E1B4B)
+val GlassSurface = Color(0x1AFFFFFF)
+val GlassBorder = Color(0x33FFFFFF)
+val GridLine = Color(0x14FFFFFF)
+val CellEmpty = Color(0x0AFFFFFF)
+val TextPrimary = Color(0xFFF8FAFC)
+val TextSecondary = Color(0xFF94A3B8)
+val AccentPrimary = Color(0xFF0EA5E9)
+val AccentSecondary = Color(0xFF8B5CF6)
+val WarningRed = Color(0xFFEF4444)
+val GhostValid = Color(0x4434D399)
+val GhostInvalid = Color(0x44EF4444)
 
 var activePalette by mutableStateOf(ColorPalette.JEWEL)
 
@@ -33,11 +35,11 @@ data class PaletteColors(
 }
 
 val JewelPalette = PaletteColors(
-    red    = Color(0xFFE53935),
-    blue   = Color(0xFF1E88E5),
-    green  = Color(0xFF43A047),
-    purple = Color(0xFF8E24AA),
-    orange = Color(0xFFFB8C00)
+    red    = Color(0xFFF43F5E),
+    blue   = Color(0xFF3B82F6),
+    green  = Color(0xFF10B981),
+    purple = Color(0xFF8B5CF6),
+    orange = Color(0xFFF59E0B)
 )
 
 val EarthyPalette = PaletteColors(
@@ -85,7 +87,7 @@ private fun currentPalette(): PaletteColors = paletteOf(activePalette)
 fun BlockColor.toComposeColor(): Color {
     val p = currentPalette()
     return when (this) {
-        BlockColor.NONE   -> BoardLight
+        BlockColor.NONE   -> CellEmpty
         BlockColor.RED    -> p.red
         BlockColor.BLUE   -> p.blue
         BlockColor.GREEN  -> p.green

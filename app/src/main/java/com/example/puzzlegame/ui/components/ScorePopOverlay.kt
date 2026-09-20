@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.puzzlegame.viewModel.ScorePop
 
-private val GoldColor = Color(0xFFFFD700)
-private val BrightGoldColor = Color(0xFFFFEA00)
+private val PrimaryPopColor = Color(0xFF38BDF8)
+private val BonusPopColor = Color(0xFF8B5CF6)
 
 
 @Composable
@@ -53,7 +53,7 @@ fun ScorePopOverlay(
             val yPx = gridOffset.y + pop.centerRow * cellSizePx
 
             val fontSize = if (pop.isBonus) 28.sp else 20.sp
-            val color = if (pop.isBonus) BrightGoldColor else GoldColor
+            val color = if (pop.isBonus) BonusPopColor else PrimaryPopColor
             val fontWeight = if (pop.isBonus) FontWeight.ExtraBold else FontWeight.Bold
 
             Box(

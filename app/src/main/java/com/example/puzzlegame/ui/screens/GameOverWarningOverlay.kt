@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.puzzlegame.ui.theme.PuzzleGameTheme
-import com.example.puzzlegame.ui.theme.TextGold
+import com.example.puzzlegame.ui.theme.TextPrimary
 import com.example.puzzlegame.ui.theme.WarningRed
 
 @Composable
@@ -101,7 +101,7 @@ fun GameOverWarningOverlay(
             Text(
                 text = "$secondsRemaining",
                 style = digitStyle.copy(
-                    color = TextGold.copy(alpha = 0.55f),
+                    color = TextPrimary.copy(alpha = 0.55f),
                     drawStyle = Stroke(width = 6f, join = StrokeJoin.Round)
                 )
             )

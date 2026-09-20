@@ -1,5 +1,7 @@
 package com.example.puzzlegame.ui.screens
 
+import androidx.compose.ui.draw.shadow
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -29,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.puzzlegame.R
-import com.example.puzzlegame.ui.theme.BoardDark
+import com.example.puzzlegame.ui.theme.BackgroundDark
 import kotlinx.coroutines.delay
 
 @Composable
@@ -54,7 +56,7 @@ fun SplashOverlay(onFinished: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .alpha(overlayAlpha.value)
-            .background(BoardDark),
+            .background(BackgroundDark),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -63,42 +65,42 @@ fun SplashOverlay(onFinished: () -> Unit) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_block_puzzle),
-                contentDescription = "Block Puzzle",
-                modifier = Modifier.size(160.dp)
+                contentDescription = "PuzzleNest Logo",
+                modifier = Modifier
+                    .size(96.dp)
+                    .shadow(
+                        elevation = 32.dp,
+                        shape = androidx.compose.foundation.shape.CircleShape,
+                        spotColor = com.example.puzzlegame.ui.theme.AccentPrimary,
+                        ambientColor = com.example.puzzlegame.ui.theme.AccentSecondary
+                    ),
+                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(com.example.puzzlegame.ui.theme.AccentPrimary)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Nana's",
+                text = "PuzzleNest",
                 style = TextStyle(
-                    fontSize = 48.sp,
+                    fontSize = 42.sp,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif,
-                    color = Color(0xFFFFD700),
-                    letterSpacing = 2.sp,
-                    shadow = Shadow(
-                        color = Color(0x88000000),
-                        offset = Offset(2f, 3f),
-                        blurRadius = 4f
-                    )
+                    fontFamily = FontFamily.SansSerif,
+                    color = com.example.puzzlegame.ui.theme.TextPrimary,
+                    letterSpacing = 1.sp
                 ),
                 textAlign = TextAlign.Center
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
-                text = "Block Puzzle",
+                text = "PUZZLE GAME",
                 style = TextStyle(
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif,
-                    color = Color(0xFFFFD700),
-                    letterSpacing = 2.sp,
-                    shadow = Shadow(
-                        color = Color(0x88000000),
-                        offset = Offset(2f, 3f),
-                        blurRadius = 4f
-                    )
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = FontFamily.SansSerif,
+                    color = com.example.puzzlegame.ui.theme.TextSecondary,
+                    letterSpacing = 4.sp
                 ),
                 textAlign = TextAlign.Center
             )

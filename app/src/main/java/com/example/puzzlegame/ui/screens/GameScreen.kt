@@ -1,5 +1,7 @@
 package com.example.puzzlegame.ui.screens
 
+import androidx.compose.ui.unit.sp
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -111,7 +113,16 @@ fun GameScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(
+                    androidx.compose.ui.graphics.Brush.verticalGradient(
+                        colors = listOf(
+                            com.example.puzzlegame.ui.theme.BackgroundDark,
+                            com.example.puzzlegame.ui.theme.GlowBlue.copy(alpha = 0.2f),
+                            com.example.puzzlegame.ui.theme.GlowPurple.copy(alpha = 0.3f),
+                            com.example.puzzlegame.ui.theme.BackgroundDark
+                        )
+                    )
+                )
                 .padding(horizontal = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -218,45 +229,49 @@ fun GameScreen(
                         )
                     }
                 )
-                Button(
-                    onClick = {
-                        if (!isRefreshing && dragState.shape == null) {
-                            isRefreshing = true
-                            coroutineScope.launch {
-                                trayOffsetX.animateTo(screenWidthPx, tween(200, easing = FastOutSlowInEasing))
-                                viewModel.refreshTray()
-                                trayOffsetX.snapTo(-screenWidthPx)
-                                trayOffsetX.animateTo(0f, tween(200, easing = FastOutSlowInEasing))
-                                isRefreshing = false
+                    Button(
+                        onClick = {
+                            if (!isRefreshing && dragState.shape == null) {
+                                isRefreshing = true
+                                coroutineScope.launch {
+                                    trayOffsetX.animateTo(screenWidthPx, tween(200, easing = FastOutSlowInEasing))
+                                    viewModel.refreshTray()
+                                    trayOffsetX.snapTo(-screenWidthPx)
+                                    trayOffsetX.animateTo(0f, tween(200, easing = FastOutSlowInEasing))
+                                    isRefreshing = false
+                                }
                             }
+                        },
+                        enabled = dragState.shape == null && gameState.score >= 500, 
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(bottom = 12.dp, start = 12.dp)
+                            .size(72.dp)
+                            .border(1.dp, com.example.puzzlegame.ui.theme.GlassBorder, androidx.compose.foundation.shape.CircleShape),
+                        shape = androidx.compose.foundation.shape.CircleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = com.example.puzzlegame.ui.theme.GlassSurface,
+                            contentColor = com.example.puzzlegame.ui.theme.AccentPrimary,
+                            disabledContainerColor = com.example.puzzlegame.ui.theme.GlassSurface.copy(alpha = 0.5f),
+                            disabledContentColor = com.example.puzzlegame.ui.theme.TextSecondary.copy(alpha = 0.5f)
+                        ),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                            Text(
+                                "↻",
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Center,
+                                lineHeight = 24.sp
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                "500pts",
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                                textAlign = TextAlign.Center
+                            )
                         }
-                    },
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .border(1.5.dp, Color(0xFFFFD54F), RoundedCornerShape(10.dp)),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1A1209),
-                        contentColor = Color(0xFFFFD54F)
-                    ),
-                    contentPadding = PaddingValues(
-                        horizontal = 14.dp, vertical = 8.dp
-                    )
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            "↻",
-                            fontSize = MaterialTheme.typography.labelMedium.fontSize * 3,
-                            textAlign = TextAlign.Center,
-                            lineHeight = (MaterialTheme.typography.labelMedium.fontSize * 3.2)
-                        )
-                        Text(
-                            "500pts",
-                            style = MaterialTheme.typography.labelMedium,
-                            textAlign = TextAlign.Center
-                        )
                     }
-                }
             }
         }
 

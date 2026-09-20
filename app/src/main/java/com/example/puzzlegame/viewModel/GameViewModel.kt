@@ -158,6 +158,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             newShapes[index] = shape.rotateCW()
             state.copy(currentShapes = newShapes)
         }
+        soundManager.playRotate()
         persistGameState()
         evaluateGameOver()
     }
@@ -167,6 +168,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val deduction = minOf(500, state.score)
         val newShapes = GameEngine.generateShapeTriple(state.grid, ensureFit = easyShapes)
         _gameState.update { it.copy(currentShapes = newShapes, score = it.score - deduction) }
+        soundManager.playRefresh()
         persistGameState()
         evaluateGameOver()
     }
@@ -176,6 +178,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             val shape = state.holdShape ?: return@update state
             state.copy(holdShape = shape.rotateCW())
         }
+        soundManager.playRotate()
         persistGameState()
         evaluateGameOver()
     }
@@ -262,6 +265,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         if (drag.ghostValid && drag.ghostRow >= 0 && drag.ghostCol >= 0) {
             _dragState.update { it.copy(isDropAnimating = true) }
         } else {
+            soundManager.playInvalid()
             _dragState.value = DragState()
         }
     }
@@ -287,6 +291,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             } else newShapes
             state.copy(holdShape = droppedShape, currentShapes = finalShapes)
         }
+        soundManager.playHold()
         persistGameState()
         evaluateGameOver()
         _dragState.value = DragState()
@@ -315,6 +320,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val lines = GameEngine.findCompleteLines(newGrid)
 
         if (hapticEnabled) _hapticEvents.tryEmit(HapticEvent.PLACE)
+        soundManager.playPlace()
 
         if (lines.isNotEmpty) {
             val clearing = lines.toCellSet(GRID_SIZE)
@@ -336,6 +342,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
                 val clearCenterCol = clearing.map { it.col }.average().toFloat()
 
                 if (hapticEnabled) _hapticEvents.tryEmit(HapticEvent.LINE_CLEAR)
+                soundManager.playClear()
 
                 finalizePlacement(
                     newGrid = clearResult.grid,
@@ -432,6 +439,13 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         if (GameEngine.isGameOver(state.grid, remaining)) startGracePeriod() else cancelGracePeriod()
     }
 
+    private val soundManager = com.example.puzzlegame.logic.SoundManager(getApplication<Application>())
+
+    override fun onCleared() {
+        super.onCleared()
+        soundManager.release()
+    }
+
     private fun startGracePeriod() {
         if (graceJob?.isActive == true) return
 
@@ -449,6 +463,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             val remaining = state.currentShapes + listOfNotNull(state.holdShape)
             if (GameEngine.isGameOver(state.grid, remaining)) {
                 _gameState.update { it.copy(isGameOver = true) }
+                soundManager.playGameOver()
                 persistGameState()
             }
         }

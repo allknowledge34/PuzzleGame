@@ -284,8 +284,10 @@ fun GameScreen(
         }
 
         if (dragState.shape != null) {
+            val dragOffsetState = viewModel.dragOffset.collectAsState()
             FloatingDragShape(
                 dragState = dragState,
+                dragOffsetState = dragOffsetState,
                 gridCellSizePx = viewModel.cellSizePx,
                 parentRootOffset = boxPositionInRoot,
                 gridRootOffset = gridPositionInRoot,
@@ -313,6 +315,7 @@ fun GameScreen(
 @Composable
 private fun FloatingDragShape(
     dragState: DragState,
+    dragOffsetState: androidx.compose.runtime.State<Offset>,
     gridCellSizePx: Float,
     parentRootOffset: Offset,
     gridRootOffset: Offset,
@@ -328,10 +331,6 @@ private fun FloatingDragShape(
     val canvasSizeDp = cellSizeDp * maxDim
 
     val liftDp = 96.dp + cellSizeDp
-
-    val fingerInParent = dragState.fingerRootOffset - parentRootOffset
-    val dragCenterX = with(density) { fingerInParent.x.toDp() }
-    val dragCenterY = with(density) { fingerInParent.y.toDp() } - heightDp / 2 - liftDp
 
     val gridInParent = gridRootOffset - parentRootOffset
     val targetCenterX = with(density) { (gridInParent.x + gridPaddingOffset.x).toDp() } +
@@ -360,22 +359,8 @@ private fun FloatingDragShape(
         }
     }
 
-    val t = dropProgress.value
-    val centerX = if (dragState.isDropAnimating) {
-        dragCenterX + (targetCenterX - dragCenterX) * t
-    } else {
-        dragCenterX
-    }
-    val centerY = if (dragState.isDropAnimating) {
-        dragCenterY + (targetCenterY - dragCenterY) * t
-    } else {
-        dragCenterY
-    }
-
-    val offsetX = centerX - canvasSizeDp / 2
-    val offsetY = centerY - canvasSizeDp / 2
-
     val scale = if (dragState.isDropAnimating) 1f else liftScale.value
+    val t = dropProgress.value
     val alpha = if (dragState.isDropAnimating) {
         0.8f + 0.2f * t
     } else {
@@ -384,7 +369,31 @@ private fun FloatingDragShape(
 
     Box(
         modifier = Modifier
-            .offset(x = offsetX, y = offsetY)
+            .offset {
+                val fingerInParent = dragOffsetState.value - parentRootOffset
+                val dragCenterXPx = fingerInParent.x
+                val dragCenterYPx = fingerInParent.y - with(density) { (heightDp / 2 + liftDp).toPx() }
+
+                val targetCenterXPx = with(density) { targetCenterX.toPx() }
+                val targetCenterYPx = with(density) { targetCenterY.toPx() }
+
+                val centerX = if (dragState.isDropAnimating) {
+                    dragCenterXPx + (targetCenterXPx - dragCenterXPx) * t
+                } else {
+                    dragCenterXPx
+                }
+                val centerY = if (dragState.isDropAnimating) {
+                    dragCenterYPx + (targetCenterYPx - dragCenterYPx) * t
+                } else {
+                    dragCenterYPx
+                }
+
+                val canvasSizePx = with(density) { canvasSizeDp.toPx() }
+                IntOffset(
+                    x = (centerX - canvasSizePx / 2f).roundToInt(),
+                    y = (centerY - canvasSizePx / 2f).roundToInt()
+                )
+            }
             .size(canvasSizeDp)
             .graphicsLayer {
                 scaleX = scale

@@ -41,7 +41,6 @@ data class DragState(
     val shapeIndex: Int = -1,
     val source: DragSource = DragSource.TRAY,
     val shape: Shape? = null,
-    val fingerRootOffset: Offset = Offset.Zero,
     val ghostRow: Int = -1,
     val ghostCol: Int = -1,
     val ghostValid: Boolean = false,
@@ -59,6 +58,10 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _dragState = MutableStateFlow(DragState())
     val dragState: StateFlow<DragState> = _dragState.asStateFlow()
+
+    private val _dragOffset = MutableStateFlow(Offset.Zero)
+    val dragOffset: StateFlow<Offset> = _dragOffset.asStateFlow()
+
 
     private val _hapticEvents = MutableSharedFlow<HapticEvent>(extraBufferCapacity = 4)
     val hapticEvents: SharedFlow<HapticEvent> = _hapticEvents.asSharedFlow()
@@ -192,6 +195,8 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun onDrag(fingerInRoot: Offset, fingerInGrid: Offset, floatingShapeCenterYOffset: Float) {
+        _dragOffset.value = fingerInRoot
+        
         val drag = _dragState.value
         val shape = drag.shape ?: return
 
@@ -205,7 +210,6 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val adjCol = kotlin.math.round(centerCol - shape.width / 2f).toInt()
 
         if (adjRow == drag.ghostRow && adjCol == drag.ghostCol) {
-            _dragState.value = drag.copy(fingerRootOffset = fingerInRoot)
             return
         }
 
@@ -220,7 +224,6 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         } else emptySet()
 
         _dragState.value = drag.copy(
-            fingerRootOffset = fingerInRoot,
             ghostRow = adjRow,
             ghostCol = adjCol,
             ghostValid = valid,
@@ -239,13 +242,13 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
 
         val shape = drag.shape!!
         val liftPx = liftBasePx + cellSizePx
-        val shapeTop = drag.fingerRootOffset.y - shape.height * cellSizePx - liftPx
-        val shapeBottom = drag.fingerRootOffset.y - liftPx
+        val shapeTop = _dragOffset.value.y - shape.height * cellSizePx - liftPx
+        val shapeBottom = _dragOffset.value.y - liftPx
         val halfW = shape.width * cellSizePx / 2f
         val shapeRect = Rect(
-            left = drag.fingerRootOffset.x - halfW,
+            left = _dragOffset.value.x - halfW,
             top = shapeTop,
-            right = drag.fingerRootOffset.x + halfW,
+            right = _dragOffset.value.x + halfW,
             bottom = shapeBottom
         )
         if (drag.source == DragSource.TRAY &&
